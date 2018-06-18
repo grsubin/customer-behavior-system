@@ -15,7 +15,7 @@ import com.texas.CustomerBehaviorSystem.model.Transaction;
 import com.texas.CustomerBehaviorSystem.service.TransactionService;
 
 @RestController
-@RequestMapping("/transaction")
+@RequestMapping("/api/transaction")
 public class TransactionController {
 	
 	@Autowired

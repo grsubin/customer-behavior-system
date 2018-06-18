@@ -17,7 +17,7 @@ import com.texas.CustomerBehaviorSystem.model.Product;
 import com.texas.CustomerBehaviorSystem.service.ProductService;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/api/product")
 public class ProductController {
 	
 	@Autowired
@@ -46,7 +46,7 @@ public class ProductController {
 		return new ResponseEntity<>(product,HttpStatus.FOUND);
 	}
 	
-	@RequestMapping(value="/all_products", method = RequestMethod.GET)
+	@RequestMapping(value="/product_list", method = RequestMethod.GET)
 	public ResponseEntity<List<Product>> findAll(){
 		List<Product> products = productService.findAll();
 		if(products == null || products.isEmpty())

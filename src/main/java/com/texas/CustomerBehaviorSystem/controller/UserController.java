@@ -17,7 +17,7 @@ import com.texas.CustomerBehaviorSystem.model.User;
 import com.texas.CustomerBehaviorSystem.service.UserService;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
 	@Autowired

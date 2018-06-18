@@ -1,46 +1,43 @@
 package com.texas.CustomerBehaviorSystem.model;
 
 import java.util.Date;
-
 import java.util.List;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-public class Transaction {
-
+public class Cart {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "transaction_id")
+	@Column(name = "cart_id")
 	private Long id;
 	
-	@ManyToOne(cascade=CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "user_id")
-	@JsonManagedReference
 	private User user;
-
+	
 	@ManyToMany
-	@JoinTable(name = "transaction_transaction_items",joinColumns = @JoinColumn(name = "transaction_id"),inverseJoinColumns = @JoinColumn(name="transaction_item_id"))
-	private List<TransactionItem> transactionItems;
+	@JoinTable(name = "cart_cart_items",joinColumns = @JoinColumn(name = "cart_id"),inverseJoinColumns = @JoinColumn(name="cart_item_id"))
+	private List<CartItem> cartItems;
 	
 	@CreationTimestamp
 	private Date creationDate;
+	
+	@UpdateTimestamp
+	private Date updateCartDate;
 
-	
-	
+
 }
