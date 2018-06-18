@@ -48,15 +48,8 @@ public class User {
     @NotEmpty(message = "*Please provide a phone number")
 	private String phoneNumber;
     
-    @Column(name = "username", nullable = false, unique = true)
-    @Length(min = 3, message = "*Your username must have at least 3 characters")
-    @NotEmpty(message = "*Please provide your username")
-	private String username;
-    
-    @Column(name = "password", nullable = false)
-    @Length(min = 6, message = "*Your password must have at least 6 characters")
-    @NotEmpty(message = "*Please provide your password")
-	private String password;
+    @OneToOne
+	private Login login;
     
 	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
 	@JsonBackReference
