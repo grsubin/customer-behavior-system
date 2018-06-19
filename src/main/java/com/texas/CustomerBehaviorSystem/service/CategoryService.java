@@ -8,6 +8,7 @@ import com.texas.CustomerBehaviorSystem.model.Category;
 public interface CategoryService {
 	
 	List<Category> findAll();
+	Category findByName(String categoryName);
 	void save(CategoryDTO categoryDTO);
 
 }

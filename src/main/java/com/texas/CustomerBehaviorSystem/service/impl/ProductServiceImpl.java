@@ -39,4 +39,9 @@ public class ProductServiceImpl implements ProductService {
 		productDAO.save(product);
 	}
 
+	@Override
+	public void delete(Long id) {
+		productDAO.deleteById(id);		
+	}
+
 }

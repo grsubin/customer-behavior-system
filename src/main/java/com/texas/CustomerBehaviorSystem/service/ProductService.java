@@ -11,4 +11,5 @@ public interface ProductService {
 	Product findByName(String name);
 	List<Product> findAll();
 	void save(Product product);
+	void delete(Long id);
 }

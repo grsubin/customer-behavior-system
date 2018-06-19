@@ -15,6 +15,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Category {
@@ -24,7 +25,7 @@ public class Category {
 	@Column(name = "id")
 	private Long id;
 	
-	@Column(name = "name")
+	@Column(name = "name", unique = true)
 	private String name;
 	
 	@Column(name = "description")
@@ -36,8 +37,8 @@ public class Category {
 	@Column(name = "active")
 	private boolean active = true;
 	
-	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-	@JsonBackReference
+	@OneToMany(mappedBy = "category", cascade = CascadeType.MERGE)
+	@JsonManagedReference
 	private List<Product> products;
 	
 	

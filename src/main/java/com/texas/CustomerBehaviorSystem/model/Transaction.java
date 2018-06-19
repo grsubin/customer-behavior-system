@@ -18,7 +18,7 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -31,7 +31,7 @@ public class Transaction {
 	
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name = "user_id")
-	@JsonManagedReference
+	@JsonBackReference
 	private User user;
 
 	@ManyToMany
@@ -40,6 +40,38 @@ public class Transaction {
 	
 	@CreationTimestamp
 	private Date creationDate;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public List<TransactionItem> getTransactionItems() {
+		return transactionItems;
+	}
+
+	public void setTransactionItems(List<TransactionItem> transactionItems) {
+		this.transactionItems = transactionItems;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
 
 	
 	
