@@ -37,7 +37,7 @@ public class Category {
 	@Column(name = "active")
 	private boolean active = true;
 	
-	@OneToMany(mappedBy = "category", cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<Product> products;
 	

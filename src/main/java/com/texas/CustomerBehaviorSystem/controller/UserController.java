@@ -17,19 +17,21 @@ import com.texas.CustomerBehaviorSystem.model.User;
 import com.texas.CustomerBehaviorSystem.service.UserService;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
 	@Autowired
 	private UserService userService;
 	
-	@RequestMapping(value ="/add",method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public 	ResponseEntity<?> save(@RequestBody User user){
+		if(userService.findByUsernameOrPhoneNumberOrEmail(user.getUsername(), null, null) != null)
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		userService.save(user);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(value="/{id:[0-9]+}", method = RequestMethod.GET)
+	@RequestMapping(value="/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Optional<User>> findById(@PathVariable("id") Long id){
 		Optional<User> user = userService.findById(id);
 		if(user == null)
@@ -37,13 +39,30 @@ public class UserController {
 		return new ResponseEntity<>(user, HttpStatus.FOUND);
 	}
 	
-	@RequestMapping(value="/{username:[0-9]*[a-zA-Z]*[0-9]*}", method = RequestMethod.GET)
-	public ResponseEntity<User> findByName(@PathVariable("username") String username){
-		User user = userService.findByUsernameOrPhoneNumberOrEmail(username, null, null);
-		if(user == null)
+		@RequestMapping(method=RequestMethod.GET)
+	public ResponseEntity<List<User>> findAll(){
+		List<User> users = userService.findAll();
+		if(users == null || users.isEmpty())
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		return new ResponseEntity<>(user, HttpStatus.FOUND);
+		return new ResponseEntity<>(users, HttpStatus.FOUND);
 	}
+		
+		@RequestMapping(value = "/{id}",method = RequestMethod.PUT)
+		public ResponseEntity<?> updateUserById(@RequestBody User user, @PathVariable Long id){
+			if(userService.findById(id)== null)
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			userService.updateUser(id, user);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		
+		
+//	@RequestMapping(value="/{username:[0-9]*[a-zA-Z]*[0-9]*}", method = RequestMethod.GET)
+//	public ResponseEntity<User> findByName(@PathVariable("username") String username){
+//		User user = userService.findByUsernameOrPhoneNumberOrEmail(username, null, null);
+//		if(user == null)
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		return new ResponseEntity<>(user, HttpStatus.FOUND);
+//	}
 	
 //	@RequestMapping(method = RequestMethod.GET)
 //	public ResponseEntity<User> getUser (@RequestParam(required = false) String username,@RequestParam(required = false) String phoneNumber,@RequestParam(required = false) String email){
@@ -54,11 +73,5 @@ public class UserController {
 //		return new ResponseEntity<>(user,HttpStatus.FOUND);
 //	}
 	
-	@RequestMapping(value="user_list", method=RequestMethod.GET)
-	public ResponseEntity<List<User>> findAll(){
-		List<User> users = userService.findAll();
-		if(users == null || users.isEmpty())
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		return new ResponseEntity<>(users, HttpStatus.FOUND);
-	}
+
 }

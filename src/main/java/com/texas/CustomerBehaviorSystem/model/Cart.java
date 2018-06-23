@@ -1,20 +1,27 @@
 package com.texas.CustomerBehaviorSystem.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.criteria.Fetch;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -27,10 +34,12 @@ public class Cart {
 	
 	@OneToOne
 	@JoinColumn(name = "user_id")
+	@JsonIgnore
 	private User user;
 	
-	@ManyToMany
-	@JoinTable(name = "cart_cart_items",joinColumns = @JoinColumn(name = "cart_id"),inverseJoinColumns = @JoinColumn(name="cart_item_id"))
+	private double amount;
+	
+	@OneToMany(mappedBy = "cart", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
 	private List<CartItem> cartItems;
 	
 	@CreationTimestamp
@@ -53,6 +62,14 @@ public class Cart {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
 	}
 
 	public List<CartItem> getCartItems() {
@@ -78,6 +95,5 @@ public class Cart {
 	public void setUpdateCartDate(Date updateCartDate) {
 		this.updateCartDate = updateCartDate;
 	}
-
-
+	
 }

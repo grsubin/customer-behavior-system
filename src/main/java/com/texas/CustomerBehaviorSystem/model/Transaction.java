@@ -1,5 +1,6 @@
 package com.texas.CustomerBehaviorSystem.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import java.util.List;
@@ -9,12 +10,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -29,50 +32,68 @@ public class Transaction {
 	@Column(name = "transaction_id")
 	private Long id;
 	
-	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name = "user_id")
-	@JsonBackReference
-	private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-	@ManyToMany
-	@JoinTable(name = "transaction_transaction_items",joinColumns = @JoinColumn(name = "transaction_id"),inverseJoinColumns = @JoinColumn(name="transaction_item_id"))
-	private List<TransactionItem> transactionItems;
+	private double amount;
 	
+    @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<TransactionItem> transactionItems;
+    
+    
 	@CreationTimestamp
 	private Date creationDate;
+
 
 	public Long getId() {
 		return id;
 	}
 
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 
 	public User getUser() {
 		return user;
 	}
 
+
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+
+	public double getAmount() {
+		return amount;
+	}
+
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
 
 	public List<TransactionItem> getTransactionItems() {
 		return transactionItems;
 	}
 
+
 	public void setTransactionItems(List<TransactionItem> transactionItems) {
 		this.transactionItems = transactionItems;
 	}
+
 
 	public Date getCreationDate() {
 		return creationDate;
 	}
 
+
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
 
-	
 	
 }

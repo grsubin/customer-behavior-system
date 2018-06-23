@@ -9,8 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Min;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class TransactionItem {
@@ -20,16 +23,17 @@ public class TransactionItem {
     @Column(name = "transaction_item_id")
 	private Long id;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private Product product;
 	
-    @Column(name = "quantity", nullable = false)
-    @Min(value = 0, message = "*Quantity has to be non negative number")
-	private Integer quantity;
-    
-	@ManyToMany(mappedBy = "transactionItems")
-	private List<Transaction> transactions;
+	private double totalPrice;
+	private int quantity;
+		
+	@ManyToOne
+	@JoinColumn(name = "transaction_id")
+	@JsonIgnore
+	private Transaction transaction;
 
 	public Long getId() {
 		return id;
@@ -47,20 +51,29 @@ public class TransactionItem {
 		this.product = product;
 	}
 
-	public Integer getQuantity() {
+	public double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public int getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Integer quantity) {
+	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
 
-	public List<Transaction> getTransactions() {
-		return transactions;
+	public Transaction getTransaction() {
+		return transaction;
 	}
 
-	public void setTransactions(List<Transaction> transactions) {
-		this.transactions = transactions;
+	public void setTransaction(Transaction transaction) {
+		this.transaction = transaction;
 	}
-
+	
+	
 }

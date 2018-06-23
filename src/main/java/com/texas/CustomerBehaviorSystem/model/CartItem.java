@@ -9,8 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Min;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class CartItem {
@@ -20,16 +23,17 @@ public class CartItem {
     @Column(name = "cart_item_id")
 	private Long id;
 	
-	@OneToOne
-	@JoinColumn(name = "product_id")
-	private Product product;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 	
-    @Column(name = "quantity", nullable = false)
-    @Min(value = 0, message = "*Quantity has to be non negative number")
-	private Integer quantity;
+    private double totalPrice;
+    private int quantity;
     
-	@ManyToMany(mappedBy = "cartItems")
-	private List<Cart> carts;
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    @JsonIgnore
+    private Cart cart;
 
 	public Long getId() {
 		return id;
@@ -47,21 +51,29 @@ public class CartItem {
 		this.product = product;
 	}
 
-	public Integer getQuantity() {
+	public double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public int getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Integer quantity) {
+	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
 
-	public List<Cart> getCarts() {
-		return carts;
+	public Cart getCart() {
+		return cart;
 	}
 
-	public void setCarts(List<Cart> carts) {
-		this.carts = carts;
+	public void setCart(Cart cart) {
+		this.cart = cart;
 	}
-	
-	
+    
+    
 }

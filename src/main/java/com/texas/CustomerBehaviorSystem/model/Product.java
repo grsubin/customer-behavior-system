@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
@@ -21,6 +22,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -44,17 +46,19 @@ public class Product {
     
     @Column(name = "price", nullable = false)
     @DecimalMin(value = "0.00", message = "*Price has to be non negative number")
-	private BigDecimal price;
+	private double price;
     
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JsonBackReference
 	private Category category;
 	
-	@OneToOne
-	private CartItem cartItem;
+    @OneToMany(mappedBy = "product")
+    @JsonIgnore
+    private List<CartItem> cartItemLists;
 	
-	@OneToOne
-	private TransactionItem transactionItem;
+    @OneToMany(mappedBy = "product")
+    @JsonIgnore
+	private List<TransactionItem> transactionItemLists;
 	
 	@CreationTimestamp
 	private Date creationDate;
@@ -94,11 +98,11 @@ public class Product {
 		this.stock = stock;
 	}
 
-	public BigDecimal getPrice() {
+	public double getPrice() {
 		return price;
 	}
 
-	public void setPrice(BigDecimal price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 
@@ -110,20 +114,22 @@ public class Product {
 		this.category = category;
 	}
 
-	public CartItem getCartItem() {
-		return cartItem;
+	public List<CartItem> getCartItemLists() {
+		return cartItemLists;
 	}
 
-	public void setCartItem(CartItem cartItem) {
-		this.cartItem = cartItem;
+	public void setCartItemLists(List<CartItem> cartItemLists) {
+		this.cartItemLists = cartItemLists;
 	}
 
-	public TransactionItem getTransactionItem() {
-		return transactionItem;
+
+
+	public List<TransactionItem> getTransactionItemLists() {
+		return transactionItemLists;
 	}
 
-	public void setTransactionItem(TransactionItem transactionItem) {
-		this.transactionItem = transactionItem;
+	public void setTransactionItemLists(List<TransactionItem> transactionItemLists) {
+		this.transactionItemLists = transactionItemLists;
 	}
 
 	public Date getCreationDate() {
@@ -142,7 +148,5 @@ public class Product {
 		this.updateProductDate = updateProductDate;
 	}
 
-
 	
-
 }

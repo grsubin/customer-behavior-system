@@ -19,7 +19,7 @@ import com.texas.CustomerBehaviorSystem.service.CategoryService;
 import com.texas.CustomerBehaviorSystem.service.ProductService;
 
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("/api//v1/products")
 public class ProductController {
 	
 	@Autowired
@@ -29,30 +29,30 @@ public class ProductController {
 	private CategoryService categoryService;
 	
 	
-	@RequestMapping(value = "/add",method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public 	ResponseEntity<?> save(@RequestBody Product product){
 		productService.save(product);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 	
-//	@RequestMapping(value="/{id}", method = RequestMethod.GET)
-//	public ResponseEntity<Optional<Product>> findById(@PathVariable Long id){
-//		Optional<Product> product = productService.findById(id);
-//		if(product == null)
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//		return new ResponseEntity<>(product, HttpStatus.FOUND);
-//	}
-	
-	@RequestMapping(value="/name", method = RequestMethod.GET)
-	public ResponseEntity<Product> findByName (@PathVariable String name){
-		
-		Product product = productService.findByName(name);
+	@RequestMapping(value="/{id}", method = RequestMethod.GET)
+	public ResponseEntity<Optional<Product>> findById(@PathVariable Long id){
+		Optional<Product> product = productService.findById(id);
 		if(product == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		return new ResponseEntity<>(product,HttpStatus.FOUND);
+		return new ResponseEntity<>(product, HttpStatus.FOUND);
 	}
 	
-	@RequestMapping(value="/product_list", method = RequestMethod.GET)
+//	@RequestMapping(value="/{name}", method = RequestMethod.GET)
+//	public ResponseEntity<Product> findByName (@PathVariable String name){
+//		
+//		Product product = productService.findByName(name);
+//		if(product == null)
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		return new ResponseEntity<>(product,HttpStatus.FOUND);
+//	}
+	
+	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<Product>> findAll(){
 		List<Product> products = productService.findAll();
 		if(products == null || products.isEmpty())
@@ -60,16 +60,16 @@ public class ProductController {
 		return new ResponseEntity<>(products, HttpStatus.FOUND);
 	}
 	
-	@RequestMapping(value ="/{category}", method = RequestMethod.GET)
-	public ResponseEntity<List<Product>> findByCategory(@PathVariable String categoryName){
-		List<Product> products = categoryService.findByName(categoryName).getProducts();
-		if(products == null || products.isEmpty())
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		return new ResponseEntity<>(products, HttpStatus.FOUND);
-	}
+//	@RequestMapping(method = RequestMethod.GET)
+//	public ResponseEntity<List<Product>> findByCategory(@RequestParam(value="category",required =false) String categoryName){
+//		List<Product> products = categoryService.findByName(categoryName).getProducts();
+//		if(products == null || products.isEmpty())
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		return new ResponseEntity<>(products, HttpStatus.OK);
+//	}
 	
 	@SuppressWarnings({ "deprecation", "unused" })
-	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteById(@PathVariable Long id){
 		Optional<Product> product = productService.findById(id);
 		if(product == null)
