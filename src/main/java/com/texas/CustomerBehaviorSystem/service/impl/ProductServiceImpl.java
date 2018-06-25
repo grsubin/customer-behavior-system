@@ -6,7 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.texas.CustomerBehaviorSystem.dao.CategoryDAO;
 import com.texas.CustomerBehaviorSystem.dao.ProductDAO;
+import com.texas.CustomerBehaviorSystem.model.Category;
 import com.texas.CustomerBehaviorSystem.model.Product;
 import com.texas.CustomerBehaviorSystem.service.ProductService;
 
@@ -15,12 +17,17 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Autowired
 	private ProductDAO productDAO;
+	
+	@Autowired
+	private CategoryDAO categoryDAO;
 
 	@Override
 	public Optional<Product> findById(Long id) {
 		Optional<Product> product = productDAO.findById(id);
 		return product;
 	}
+	
+	
 
 	@Override
 	public Product findByName(String name) {
@@ -36,6 +43,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public void save(Product product) {
+//		if(categoryDAO.findByName(product.getCategory().getName()) != null)
+		product.setCategory(categoryDAO.findByName(product.getCategory().getName()));
+		System.out.println(product.getCategory().getName());
 		productDAO.save(product);
 	}
 
@@ -43,5 +53,16 @@ public class ProductServiceImpl implements ProductService {
 	public void delete(Long id) {
 		productDAO.deleteById(id);		
 	}
+
+
+
+	@Override
+	public List<Product> getProductsByCategory(Category category) {
+		return productDAO.findByCategory(category);
+	}
+
+
+
+
 
 }

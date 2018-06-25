@@ -15,6 +15,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -37,8 +38,8 @@ public class Category {
 	@Column(name = "active")
 	private boolean active = true;
 	
-	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-	@JsonManagedReference
+	@OneToMany(mappedBy = "category")
+	@JsonIgnore
 	private List<Product> products;
 	
 	

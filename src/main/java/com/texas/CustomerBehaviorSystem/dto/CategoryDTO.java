@@ -5,9 +5,7 @@ public class CategoryDTO {
 	private Long id;
 	private String name;
 	private String description;
-	private String imageURL;
-	private boolean active = true;
-	
+	private String imageURL;	
 	
 	public Long getId() {
 		return id;
@@ -32,12 +30,6 @@ public class CategoryDTO {
 	}
 	public void setImageURL(String imageURL) {
 		this.imageURL = imageURL;
-	}
-	public boolean isActive() {
-		return active;
-	}
-	public void setActive(boolean active) {
-		this.active = active;
 	}
 	
 	

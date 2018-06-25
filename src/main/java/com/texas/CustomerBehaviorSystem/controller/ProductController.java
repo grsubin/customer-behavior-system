@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.texas.CustomerBehaviorSystem.model.Category;
 import com.texas.CustomerBehaviorSystem.model.Product;
 import com.texas.CustomerBehaviorSystem.service.CategoryService;
 import com.texas.CustomerBehaviorSystem.service.ProductService;
@@ -31,6 +32,8 @@ public class ProductController {
 	
 	@RequestMapping(method = RequestMethod.POST)
 	public 	ResponseEntity<?> save(@RequestBody Product product){
+		if(categoryService.findByName(product.getCategory().getName()) == null)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		productService.save(product);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
@@ -60,13 +63,14 @@ public class ProductController {
 		return new ResponseEntity<>(products, HttpStatus.FOUND);
 	}
 	
-//	@RequestMapping(method = RequestMethod.GET)
-//	public ResponseEntity<List<Product>> findByCategory(@RequestParam(value="category",required =false) String categoryName){
-//		List<Product> products = categoryService.findByName(categoryName).getProducts();
-//		if(products == null || products.isEmpty())
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//		return new ResponseEntity<>(products, HttpStatus.OK);
-//	}
+	@RequestMapping(value = "/c",method = RequestMethod.GET)
+	public ResponseEntity<List<Product>> findByCategory(@RequestParam(value = "category",required =false) String categoryName){
+		Category category = categoryService.findByName(categoryName);
+		List<Product> products = productService.getProductsByCategory(category);
+		if(products == null || products.isEmpty())
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(products, HttpStatus.OK);
+	}
 	
 	@SuppressWarnings({ "deprecation", "unused" })
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

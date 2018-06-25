@@ -3,6 +3,7 @@ package com.texas.CustomerBehaviorSystem.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.texas.CustomerBehaviorSystem.model.Category;
 import com.texas.CustomerBehaviorSystem.model.Product;
 
 public interface ProductService {
@@ -12,4 +13,5 @@ public interface ProductService {
 	List<Product> findAll();
 	void save(Product product);
 	void delete(Long id);
+	List<Product> getProductsByCategory(Category category);
 }

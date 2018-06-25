@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -48,8 +49,8 @@ public class Product {
     @DecimalMin(value = "0.00", message = "*Price has to be non negative number")
 	private double price;
     
-	@ManyToOne(cascade=CascadeType.ALL)
-	@JsonBackReference
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "category_id", nullable = false)
 	private Category category;
 	
     @OneToMany(mappedBy = "product")
@@ -146,6 +147,14 @@ public class Product {
 
 	public void setUpdateProductDate(Date updateProductDate) {
 		this.updateProductDate = updateProductDate;
+	}
+
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", stock=" + stock + ", price="
+				+ price + ", category=" + category + ", cartItemLists=" + cartItemLists + ", transactionItemLists="
+				+ transactionItemLists + ", creationDate=" + creationDate + ", updateProductDate=" + updateProductDate
+				+ "]";
 	}
 
 	
