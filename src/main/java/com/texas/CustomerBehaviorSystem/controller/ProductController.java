@@ -7,6 +7,7 @@ import org.hamcrest.collection.IsEmptyCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import com.texas.CustomerBehaviorSystem.service.ProductService;
 
 @RestController
 @RequestMapping("/api//v1/products")
+@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 public class ProductController {
 	
 	@Autowired
@@ -30,17 +32,11 @@ public class ProductController {
 	private CategoryService categoryService;
 	
 	
-	@RequestMapping(method = RequestMethod.POST)
-	public 	ResponseEntity<?> save(@RequestBody Product product){
-		if(categoryService.findByName(product.getCategory().getName()) == null)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		productService.save(product);
-		return new ResponseEntity<>(HttpStatus.CREATED);
-	}
+
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Optional<Product>> findById(@PathVariable Long id){
-		Optional<Product> product = productService.findById(id);
+	public ResponseEntity<Product> findById(@PathVariable Long id){
+		Product product = productService.findById(id);
 		if(product == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		return new ResponseEntity<>(product, HttpStatus.FOUND);
@@ -72,17 +68,7 @@ public class ProductController {
 		return new ResponseEntity<>(products, HttpStatus.OK);
 	}
 	
-	@SuppressWarnings({ "deprecation", "unused" })
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteById(@PathVariable Long id){
-		Optional<Product> product = productService.findById(id);
-		if(product == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		productService.delete(id);
-		if(product == null)
-			return new ResponseEntity<>(HttpStatus.OK);
-		return new ResponseEntity<>(HttpStatus.METHOD_FAILURE);
-	}
+
 	
 
 }

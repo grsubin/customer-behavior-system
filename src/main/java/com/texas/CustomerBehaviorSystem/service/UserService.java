@@ -3,15 +3,27 @@ package com.texas.CustomerBehaviorSystem.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.texas.CustomerBehaviorSystem.dto.UserDto;
+import com.texas.CustomerBehaviorSystem.dto.UserUpdateDTO;
 import com.texas.CustomerBehaviorSystem.model.User;
 
 public interface UserService{
 	
-	void save(User user);
-	Optional<User> findById(Long id);
-	User findByUsernameOrPhoneNumberOrEmail(String username, String phoneNumber, String email);
-	List<User> findAll();
-	void updateUser(Long id, User user);
+//	User save(User user);
+//	Optional<User> findById(Long id);	
+//	List<User> findAll();
+	
+    User save(UserDto user);
+    List<User> findAll();
+    void delete(long id);
+    User findOne(String username);
+
+    User findById(Long id);
+
+    
+	User updateUser(Long id, UserUpdateDTO user);
+//	User findByUsernameOrPhoneNumberOrEmail(String username, String phoneNumber, String email);
+
 //	User findByUsername(String username);
 //	User findByPhoneNumber(String phoneNumber);
 //	User findByEmail(String email);

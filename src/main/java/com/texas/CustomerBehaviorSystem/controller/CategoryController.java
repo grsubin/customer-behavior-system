@@ -14,7 +14,7 @@ import com.texas.CustomerBehaviorSystem.dto.CategoryDTO;
 import com.texas.CustomerBehaviorSystem.service.CategoryService;
 
 @RestController
-@RequestMapping("/api/v1/categorys")
+@RequestMapping("/api/v1/categories")
 public class CategoryController {
 
 	@Autowired
@@ -26,12 +26,12 @@ public class CategoryController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<Object>> findAll(){
-		
-	}
-	
-	public ResponseEntity<List<Object>> findByCategory(){
-		
-	}
+//	@RequestMapping(method = RequestMethod.GET)
+//	public ResponseEntity<List<Object>> findAll(){
+//		
+//	}
+//	
+//	public ResponseEntity<List<Object>> findByCategory(){
+//		
+//	}
 }

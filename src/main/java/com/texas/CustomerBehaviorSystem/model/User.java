@@ -2,6 +2,7 @@ package com.texas.CustomerBehaviorSystem.model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
@@ -32,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class User {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
 	private Long id;
 	
@@ -58,18 +61,19 @@ public class User {
     @NotEmpty(message = "*Please provide your username")
 	private String username;
     
-    @Column(name = "password", nullable = false)
-    @Length(min = 6, message = "*Your password must have at least 6 characters")
-    @NotEmpty(message = "*Please provide your password")
+    @Column(name = "password")
+    @JsonIgnore
 	private String password;
     
-    @OneToOne
-    @JoinColumn(name = "cart_id")
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY,cascade=CascadeType.ALL)
     @JsonIgnore
     private Cart cart;
     
-    @OneToMany(mappedBy = "user")
-    private List<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_ROLES", joinColumns = {
+            @JoinColumn(name = "USER_ID") }, inverseJoinColumns = {
+            @JoinColumn(name = "ROLE_ID") })
+    private Set<Role> roles;
  
 	@CreationTimestamp
 	private Date creationDate;
@@ -163,12 +167,13 @@ public class User {
 	}
 
 
-	public List<Role> getRoles() {
+
+	public Set<Role> getRoles() {
 		return roles;
 	}
 
 
-	public void setRoles(List<Role> roles) {
+	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
 

@@ -6,9 +6,10 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -50,6 +51,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 //    }
 //}
 
+@SuppressWarnings("deprecation")
 @Profile("enable-swagger")
 @Configuration
 @EnableSwagger2
@@ -57,6 +59,7 @@ public class SwaggerConfig extends WebMvcConfigurerAdapter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SwaggerConfig.class);
 
+	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
@@ -78,7 +81,7 @@ public class SwaggerConfig extends WebMvcConfigurerAdapter {
 		
 		//System.out.println("---------------------------------------------");
 
-		ApiInfo apiInfo = new ApiInfo(" CUstomerBehaviorSystem", "", "", "",
+		ApiInfo apiInfo = new ApiInfo(" CustomerBehaviorSystem", "", "", "",
 				new Contact("", "", ""), "", "");
 
 		return apiInfo;
@@ -90,4 +93,7 @@ public class SwaggerConfig extends WebMvcConfigurerAdapter {
 		return new FilterRegistrationBean(new SwaggerUrlFilter());
 
 	}
+	
+	
+	
 }

@@ -12,8 +12,7 @@ import com.texas.CustomerBehaviorSystem.model.Product;
 @Repository
 public interface ProductDAO extends JpaRepository<Product, Long>{
 	
-	Optional<Product> findById(Long id);
 	Product findByName(String name);
-	List<Product> findByCategory(Category category);
+	List<Product> findByCategory(String categoryName);
 	
 }

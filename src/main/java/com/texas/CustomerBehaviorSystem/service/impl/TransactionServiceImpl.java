@@ -55,7 +55,7 @@ public class TransactionServiceImpl implements TransactionService{
 	@Override
 	public List<Transaction> findTransactionByUserUsername(String username) {
 		User user = null;
-		user = userDAO.findByUsernameOrPhoneNumberOrEmail(username, null, null);
+		user = userDAO.findByUsername(username);
 		List<Transaction> transactions = null;
 		transactions = transactionDAO.findByUser(user);
 		return transactions;

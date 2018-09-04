@@ -32,8 +32,8 @@ public class Cart {
 	@Column(name = "cart_id")
 	private Long id;
 	
-	@OneToOne
-	@JoinColumn(name = "user_id")
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
 	@JsonIgnore
 	private User user;
 	
