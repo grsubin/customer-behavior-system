@@ -62,6 +62,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Profile("enable-swagger")
 @Configuration
 @EnableSwagger2
+@EnableWebMvc
 public class SwaggerConfig extends WebMvcConfigurerAdapter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SwaggerConfig.class);

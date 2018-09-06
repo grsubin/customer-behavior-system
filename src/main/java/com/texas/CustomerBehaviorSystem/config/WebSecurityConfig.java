@@ -48,6 +48,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     
 //    @Override
+//    public void configure(final WebSecurity web) throws Exception {
+//        web.ignoring().antMatchers("/**");
+//    }
+    
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+//        web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", "/swagger-ui.html", "/webjars/**");
+//    }
+//    
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+//        web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/**", "/swagger-ui.html", "/webjars/**");
+//
+//    }
+    
+//    @Override
 //    public void configure(WebSecurity web) throws Exception {
 //        web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui", "/swagger-resources", "/swagger-resources/configuration/security", "/swagger-ui.html/*", "/webjars/**");
 //    }
@@ -67,7 +83,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
         		.authorizeRequests()
-                .antMatchers("/api/v1/auth/login", "/api/v1/auth/register", "/swagger-resources","/v2/api-docs", "/swagger-resources/configuration/ui", "/swagger-resources/configuration/security", "/swagger-ui.html/*", "/webjars/**","/swagger-ui.html","/configuration/security","/configuration/ui","/favicon.ico","/webjars/springfox-swagger-ui/**").permitAll()
+                .antMatchers("/api/v1/auth/login", "/api/v1/auth/register", "/v2/api-docs", "/swagger-resources/configuration/ui", "/configuration/ui", "/swagger-resources", "/swagger-resources/configuration/security", "/configuration/security", "/swagger-ui.html", "/webjars/**").permitAll()
                 .and()
                 .authorizeRequests()
                 .anyRequest().authenticated()
