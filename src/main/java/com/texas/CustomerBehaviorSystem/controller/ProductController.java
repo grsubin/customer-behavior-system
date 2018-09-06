@@ -21,7 +21,7 @@ import com.texas.CustomerBehaviorSystem.service.CategoryService;
 import com.texas.CustomerBehaviorSystem.service.ProductService;
 
 @RestController
-@RequestMapping("/api//v1/products")
+@RequestMapping("/api/v1/products")
 @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 public class ProductController {
 	

@@ -21,7 +21,7 @@ public interface UserService{
     User findById(Long id);
 
     
-	User updateUser(Long id, UserUpdateDTO user);
+	User updateUser(String username, UserUpdateDTO user);
 //	User findByUsernameOrPhoneNumberOrEmail(String username, String phoneNumber, String email);
 
 //	User findByUsername(String username);

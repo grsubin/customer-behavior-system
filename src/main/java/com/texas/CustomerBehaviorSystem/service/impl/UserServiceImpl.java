@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import com.texas.CustomerBehaviorSystem.dao.CartDAO;
+import com.texas.CustomerBehaviorSystem.dao.RoleDAO;
 import com.texas.CustomerBehaviorSystem.dao.UserDAO;
 import com.texas.CustomerBehaviorSystem.dto.UserDto;
 import com.texas.CustomerBehaviorSystem.dto.UserUpdateDTO;
@@ -32,6 +34,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	
 	@Autowired
 	private UserDAO userDAO;
+	
+	@Autowired
+	private CartDAO cartDAO;
+	
+	@Autowired
+	private RoleDAO roleDAO;
 	
 	@Autowired
 	private BCryptPasswordEncoder bcryptEncoder;
@@ -67,9 +75,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	    newUser.setEmail(user.getEmail());
 	    newUser.setPhoneNumber(user.getPhoneNumber());
 	    Set<Role> roles = new HashSet<>();
-	    roles.add(new Role("USER", "User Role"));
+	    Role role = roleDAO.findByName(RoleAuthority.USER);
+	    roles.add(role);
 	    newUser.setRoles(roles);
-        return userDAO.save(newUser);
+	    Cart cart = new Cart();   
+	    User userSave = userDAO.save(newUser);
+	    cart.setUser(userSave);
+	    cartDAO.save(cart);
+	    return userSave;
+	    
 	}	
 
 	@Override
@@ -96,12 +110,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public User updateUser(Long id, UserUpdateDTO userUpdate){
+	public User updateUser(String username, UserUpdateDTO userUpdate){
 
-		if(id == null)
-			throw new RequiredTypeException("User id is needed");
-		User user = userDAO.findById(id).get();
-		if(userUpdate == null)
+		if(username == null)
+			throw new RequiredTypeException("Username is needed");
+		User user = userDAO.findByUsername(username);
+		if(user == null)
 			try {
 				throw new NotFoundException("User not found");
 				} catch (NotFoundException e) {
@@ -113,7 +127,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		if(userUpdate.getLastName() != null)
 			user.setLastName(userUpdate.getLastName());
 		if(userUpdate.getPhoneNumber() != null)
-			user.setPhoneNumber(userUpdate.getPhoneNumber());			
+			user.setPhoneNumber(userUpdate.getPhoneNumber());
+		if(userUpdate.getPassword()!=null)
+			user.setPassword(userUpdate.getPassword());
 		
 		User userSave = userDAO.save(user);
 		return userSave;

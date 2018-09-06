@@ -16,10 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.texas.CustomerBehaviorSystem.config.TokenProvider;
 import com.texas.CustomerBehaviorSystem.dto.UserDto;
 import com.texas.CustomerBehaviorSystem.dto.UserUpdateDTO;
 import com.texas.CustomerBehaviorSystem.model.User;
 import com.texas.CustomerBehaviorSystem.service.UserService;
+import static com.texas.CustomerBehaviorSystem.model.Constants.TOKEN_PREFIX;
+
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 
@@ -30,27 +33,51 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+    @Autowired
+    private TokenProvider jwtTokenUtil;
 	
 
 	
-	@RequestMapping(value="/{id}", method = RequestMethod.GET)
-	public ResponseEntity<User> findById(@RequestHeader String authorization,@PathVariable("id") Long id){
-		User user = userService.findById(id);
-		if(user == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		return new ResponseEntity<>(user, HttpStatus.FOUND);
+//	@RequestMapping(value="/{id}", method = RequestMethod.GET)
+//	public ResponseEntity<User> findById(@RequestHeader String authorization,@PathVariable("id") Long id){
+//		User user = userService.findById(id);
+//		if(user == null)
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		return new ResponseEntity<>(user, HttpStatus.FOUND);
+//	}
+	
+	@RequestMapping(value="/{username}", method = RequestMethod.GET)
+	public ResponseEntity<User> findByUsername(@RequestHeader String authorization,@PathVariable("username") String username){
+		authorization = authorization.replace(TOKEN_PREFIX, "");
+		String tokenUsername = jwtTokenUtil.getUsernameFromToken(authorization);
+		if(tokenUsername.equals(username)) {
+			User user = userService.findOne(username);
+			if(user == null)
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(user, HttpStatus.FOUND);
+		}else {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 	}
 	
 
+	
 		
-		@RequestMapping(value = "/{id}",method = RequestMethod.PUT)
-		public ResponseEntity<User> updateUserById(@RequestBody UserUpdateDTO userUpdate, @PathVariable Long id){
-			if(userService.findById(id)== null)
+	@RequestMapping(value = "/{username}",method = RequestMethod.PUT)
+	public ResponseEntity<User> updateUserById(@RequestHeader String authorization,@RequestBody UserUpdateDTO userUpdate, @PathVariable String username){
+		authorization = authorization.replace(TOKEN_PREFIX, "");
+		String tokenUsername = jwtTokenUtil.getUsernameFromToken(authorization);
+		if(tokenUsername.equals(username)) {
+			if(userService.findOne(username)== null)
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			User user = userService.updateUser(id, userUpdate);
+			User user = userService.updateUser(username, userUpdate);
 			return new ResponseEntity<>(user, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		
+	}
 		
 //	@RequestMapping(value="/{username:[0-9]*[a-zA-Z]*[0-9]*}", method = RequestMethod.GET)
 //	public ResponseEntity<User> findByName(@PathVariable("username") String username){

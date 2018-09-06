@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.texas.CustomerBehaviorSystem.dao.CartDAO;
 import com.texas.CustomerBehaviorSystem.dao.CartItemDAO;
+import com.texas.CustomerBehaviorSystem.dao.ProductDAO;
 import com.texas.CustomerBehaviorSystem.dao.TransactionDAO;
+import com.texas.CustomerBehaviorSystem.dao.TransactionItemDAO;
 import com.texas.CustomerBehaviorSystem.dao.UserDAO;
 import com.texas.CustomerBehaviorSystem.model.Cart;
 import com.texas.CustomerBehaviorSystem.model.CartItem;
@@ -27,6 +29,9 @@ public class TransactionServiceImpl implements TransactionService{
 	TransactionDAO transactionDAO;
 	
 	@Autowired
+	TransactionItemDAO transactionItemDAO;
+	
+	@Autowired
 	UserDAO userDAO;
 	
 	@Autowired
@@ -35,9 +40,12 @@ public class TransactionServiceImpl implements TransactionService{
 	@Autowired
 	CartItemDAO cartItemDAO;
 	
+	@Autowired
+	ProductDAO productDAO;
+	
 	@Override
-	public Optional<Transaction> findById(Long id) {
-		Optional<Transaction> transaction = transactionDAO.findById(id);
+	public Transaction findById(Long id) {
+		Transaction transaction = transactionDAO.findById(id).get();
 		return transaction;
 	}
 
@@ -48,8 +56,10 @@ public class TransactionServiceImpl implements TransactionService{
 	}
 
 	@Override
-	public void save(Transaction transaction) {
-		transactionDAO.save(transaction);
+	public Transaction save(Transaction transaction) {
+		
+		Transaction transactionSave = transactionDAO.save(transaction);
+		return transactionSave;
 	}
 
 	@Override
@@ -72,15 +82,15 @@ public class TransactionServiceImpl implements TransactionService{
 	}
 
 	@Override
-	public void addTransactionDumpCart(Transaction transaction, Cart cart) throws IOException{
+	public Transaction addTransactionDumpCart(Cart cart) throws IOException{
 
-		if(transaction == null || cart == null){
+		if(cart == null){
 			throw new IOException();
 		}
+		Transaction transaction = new Transaction();
 		transaction.setUser(cart.getUser());	
 		transaction.setAmount(cart.getAmount());
 		
-		transactionDAO.save(transaction);
 		cart.setAmount(0);
 		cartService.saveCart(cart);
 		// dump cartItem to orderItem, empty cart
@@ -88,11 +98,20 @@ public class TransactionServiceImpl implements TransactionService{
 			TransactionItem transactionItem = new TransactionItem();
 
 			transactionItem.setTransaction(transaction);
-			transactionItem.setProduct(cartItem.getProduct());
+			transactionItem.setProductId(cartItem.getProduct().getId());
+			transactionItem.setPrice(cartItem.getProduct().getPrice());
+			transactionItem.setProductName(cartItem.getProduct().getName());
 			transactionItem.setQuantity(cartItem.getQuantity());
-			transactionDAO.save(transaction);
+			transactionItem.setTotalPrice(cartItem.getTotalPrice());
+			transactionItemDAO.save(transactionItem);
+			cartItem.getProduct().setStock(cartItem.getProduct().getStock()-cartItem.getQuantity());
+			productDAO.save(cartItem.getProduct());
 			cartItemDAO.delete(cartItem);
 		}
+		
+		Transaction transactionSave = transactionDAO.save(transaction);
+		
+		return transactionSave;
 	}
 	
 	

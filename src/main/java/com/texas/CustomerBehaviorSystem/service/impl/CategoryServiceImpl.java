@@ -10,6 +10,9 @@ import com.texas.CustomerBehaviorSystem.dto.CategoryDTO;
 import com.texas.CustomerBehaviorSystem.model.Category;
 import com.texas.CustomerBehaviorSystem.service.CategoryService;
 
+import io.jsonwebtoken.RequiredTypeException;
+import javassist.NotFoundException;
+
 @Service
 public class CategoryServiceImpl implements CategoryService{
 
@@ -38,6 +41,31 @@ public class CategoryServiceImpl implements CategoryService{
 	public Category findByName(String categoryName) {
 		Category category = categoryDAO.findByName(categoryName);
 		return category;
+	}
+
+
+	@Override
+	public Category updateCategory(String categoryName, CategoryDTO categoryUpdate) {
+
+		if(categoryName == null)
+			throw new RequiredTypeException("Category name is needed");
+		Category category = categoryDAO.findByName(categoryName);
+		if(category == null)
+			try {
+				throw new NotFoundException("Category not found");
+			}catch (NotFoundException e) {
+				e.printStackTrace();
+			}
+		if(categoryUpdate.getName() != null)
+			category.setName(categoryUpdate.getName());
+		if(categoryUpdate.getDescription() != null)
+			category.setDescription(categoryUpdate.getDescription());
+		if(categoryUpdate.getImageURL() != null)
+			category.setImageURL(categoryUpdate.getImageURL());
+		
+		Category categorySave = categoryDAO.save(category);
+		
+		return categorySave;
 	}
 
 }

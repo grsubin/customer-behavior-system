@@ -10,5 +10,6 @@ public interface CategoryService {
 	List<Category> findAll();
 	Category findByName(String categoryName);
 	void save(CategoryDTO categoryDTO);
+	Category updateCategory(String categoryName, CategoryDTO categoryUpdate);
 
 }

@@ -26,15 +26,15 @@ public class CartServiceImpl implements CartService{
 	private TransactionService transactionService;
 	
 	@Override
-	public Optional<Cart> findById(Long id) {
+	public Cart findById(Long id) {
 
-		return cartDAO.findById(id);
+		return cartDAO.findById(id).get();
 	}
 
 	@Override
-	public void saveCart(Cart cart) {
-
-		 cartDAO.save(cart);
+	public Cart saveCart(Cart cart) {
+		Cart cartSave = cartDAO.save(cart);
+		return cartSave;
 	}
 
 	@Override
@@ -48,14 +48,15 @@ public class CartServiceImpl implements CartService{
 	
 
 	@Override
-	public void update(Cart cart) {
+	public Cart update(Cart cart) {
         double amount = transactionService.getAmountByCart(cart);
         Double truncatedDouble = new BigDecimal(amount)
                 .setScale(3, BigDecimal.ROUND_HALF_UP)
                 .doubleValue();
         cart.setAmount(truncatedDouble);
 
-        cartDAO.save(cart);		
+        Cart cartSave = cartDAO.save(cart);		
+        return cartSave;
 	}
 
 }

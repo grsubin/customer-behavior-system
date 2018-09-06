@@ -57,10 +57,6 @@ public class Product {
     @JsonIgnore
     private List<CartItem> cartItemLists;
 	
-    @OneToMany(mappedBy = "product")
-    @JsonIgnore
-	private List<TransactionItem> transactionItemLists;
-	
 	@CreationTimestamp
 	private Date creationDate;
 	
@@ -123,16 +119,6 @@ public class Product {
 		this.cartItemLists = cartItemLists;
 	}
 
-
-
-	public List<TransactionItem> getTransactionItemLists() {
-		return transactionItemLists;
-	}
-
-	public void setTransactionItemLists(List<TransactionItem> transactionItemLists) {
-		this.transactionItemLists = transactionItemLists;
-	}
-
 	public Date getCreationDate() {
 		return creationDate;
 	}
@@ -149,13 +135,6 @@ public class Product {
 		this.updateProductDate = updateProductDate;
 	}
 
-	@Override
-	public String toString() {
-		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", stock=" + stock + ", price="
-				+ price + ", category=" + category + ", cartItemLists=" + cartItemLists + ", transactionItemLists="
-				+ transactionItemLists + ", creationDate=" + creationDate + ", updateProductDate=" + updateProductDate
-				+ "]";
-	}
 
 	
 }

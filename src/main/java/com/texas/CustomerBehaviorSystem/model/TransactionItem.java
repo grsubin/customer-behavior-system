@@ -23,9 +23,9 @@ public class TransactionItem {
     @Column(name = "transaction_item_id")
 	private Long id;
 	
-	@ManyToOne
-	@JoinColumn(name = "product_id")
-	private Product product;
+    private Long productId;
+    private double Price;
+    private String productName;
 	
 	private double totalPrice;
 	private int quantity;
@@ -43,12 +43,28 @@ public class TransactionItem {
 		this.id = id;
 	}
 
-	public Product getProduct() {
-		return product;
+	public Long getProductId() {
+		return productId;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProductId(Long productId) {
+		this.productId = productId;
+	}
+
+	public double getPrice() {
+		return Price;
+	}
+
+	public void setPrice(double price) {
+		Price = price;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
 
 	public double getTotalPrice() {
@@ -74,6 +90,5 @@ public class TransactionItem {
 	public void setTransaction(Transaction transaction) {
 		this.transaction = transaction;
 	}
-	
-	
+
 }

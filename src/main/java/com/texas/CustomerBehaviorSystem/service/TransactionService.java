@@ -9,10 +9,10 @@ import com.texas.CustomerBehaviorSystem.model.Transaction;
 
 public interface TransactionService {
 
-	void save(Transaction transaction);
-	Optional<Transaction> findById(Long id);
+	Transaction save(Transaction transaction);
+	Transaction findById(Long id);
 	List<Transaction> findAll();
 	List<Transaction> findTransactionByUserUsername(String username);
 	double getAmountByCart(Cart cart);
-	void addTransactionDumpCart(Transaction transaction, Cart cart) throws IOException;
+	Transaction addTransactionDumpCart( Cart cart) throws IOException;
 }
