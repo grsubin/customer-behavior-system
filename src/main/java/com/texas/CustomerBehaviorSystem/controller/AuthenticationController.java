@@ -4,6 +4,8 @@ package com.texas.CustomerBehaviorSystem.controller;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import com.texas.CustomerBehaviorSystem.config.TokenProvider;
 import com.texas.CustomerBehaviorSystem.dto.LoginDTO;
 import com.texas.CustomerBehaviorSystem.dto.UserDto;
 import com.texas.CustomerBehaviorSystem.model.AuthToken;
+import com.texas.CustomerBehaviorSystem.model.Role;
 import com.texas.CustomerBehaviorSystem.service.UserService;
 
 import io.swagger.annotations.ApiImplicitParam;
@@ -50,7 +53,8 @@ public class AuthenticationController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenUtil.generateToken(authentication);
-        return ResponseEntity.ok(new AuthToken(token, jwtTokenUtil.getExpirationDateFromToken(token)));
+        Set<Role> roles=userService.findOne(jwtTokenUtil.getUsernameFromToken(token)).getRoles();
+        return ResponseEntity.ok(new AuthToken(token, jwtTokenUtil.getExpirationDateFromToken(token), roles));
     }
     
 	@RequestMapping(value = "/register",method = RequestMethod.POST)
