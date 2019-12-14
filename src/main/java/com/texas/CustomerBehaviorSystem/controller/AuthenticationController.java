@@ -1,7 +1,6 @@
 package com.texas.CustomerBehaviorSystem.controller;
 
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
 import java.util.Date;
 import java.util.List;
@@ -54,7 +53,7 @@ public class AuthenticationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenUtil.generateToken(authentication);
         Set<Role> roles=userService.findOne(jwtTokenUtil.getUsernameFromToken(token)).getRoles();
-        return ResponseEntity.ok(new AuthToken(token, jwtTokenUtil.getExpirationDateFromToken(token), roles));
+        return ResponseEntity.ok(new AuthToken(token, jwtTokenUtil.getExpirationDateFromToken(token), roles, loginUser.getUsername()));
     }
     
 	@RequestMapping(value = "/register",method = RequestMethod.POST)

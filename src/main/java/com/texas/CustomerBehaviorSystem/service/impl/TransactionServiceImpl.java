@@ -1,10 +1,13 @@
 package com.texas.CustomerBehaviorSystem.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.texas.CustomerBehaviorSystem.dao.CartDAO;
@@ -88,12 +91,36 @@ public class TransactionServiceImpl implements TransactionService{
 			throw new IOException();
 		}
 		Transaction transaction = new Transaction();
-		transaction.setUser(cart.getUser());	
+		transaction.setUser(cart.getUser());
+		transactionDAO.save(transaction);
+
 		transaction.setAmount(cart.getAmount());
-		
-		cart.setAmount(0);
-		cartService.saveCart(cart);
+		List<TransactionItem> transactionItems = new ArrayList<TransactionItem>();
+		transaction.setTransactionItems(transactionItems);
+//		List<CartItem> cartItems = cart.getCartItems();
+//		cart.setAmount(0);
+//		cartService.saveCart(cart);
 		// dump cartItem to orderItem, empty cart
+
+		
+//		 for(int i = 0; i<cartItems.size(); i++){
+//				TransactionItem transactionItem = new TransactionItem();
+//				System.out.println("Inside transaction"+cart.getCartItems().size()+cart.getCartItems().toString());
+//
+//			 			transactionItem.setTransaction(transaction);
+//			 			transactionItem.setProductId(cartItems.get(i).getProduct().getId());
+//			 			transactionItem.setPrice(cartItems.get(i).getProduct().getPrice());
+//			 			transactionItem.setProductName(cartItems.get(i).getProduct().getName());
+//			 			transactionItem.setQuantity(cartItems.get(i).getQuantity());
+//			 			transactionItem.setTotalPrice(cartItems.get(i).getTotalPrice());
+//			 			transactionItemDAO.save(transactionItem);
+//			 			transaction.getTransactionItems().add(transactionItem);
+//			 			cartItems.get(i).getProduct().setStock(cartItems.get(i).getProduct().getStock()-cartItems.get(i).getQuantity());
+//			 			productDAO.save(cartItems.get(i).getProduct());
+//			 			cartItemDAO.delete(cartItems.get(i));
+//			 			cart.getCartItems().remove(cartItems.get(i));
+//			 			cartService.update(cart);
+//	            }
 		for(CartItem cartItem : cart.getCartItems()){
 			TransactionItem transactionItem = new TransactionItem();
 
@@ -104,10 +131,35 @@ public class TransactionServiceImpl implements TransactionService{
 			transactionItem.setQuantity(cartItem.getQuantity());
 			transactionItem.setTotalPrice(cartItem.getTotalPrice());
 			transactionItemDAO.save(transactionItem);
+			transaction.getTransactionItems().add(transactionItem);
 			cartItem.getProduct().setStock(cartItem.getProduct().getStock()-cartItem.getQuantity());
 			productDAO.save(cartItem.getProduct());
-			cartItemDAO.delete(cartItem);
+// 			cartItemDAO.delete(cartItem);
+// 			cart.getCartItems().remove(cartItem);
+// 			cartService.update(cart);
 		}
+		cartService.emptyCart(cart);
+//		while (cart.getCartItems().isEmpty()) {				
+//			
+//			TransactionItem transactionItem = new TransactionItem();
+//		System.out.println("Inside transaction"+cart.getCartItems().size()+cart.getCartItems().toString());
+//
+//	 			transactionItem.setTransaction(transaction);
+//	 			transactionItem.setProductId(cart.getCartItems().cartItems.stream().getProduct().getId());
+//	 			transactionItem.setPrice(cartItems.get(i).getProduct().getPrice());
+//	 			transactionItem.setProductName(cartItems.get(i).getProduct().getName());
+//	 			transactionItem.setQuantity(cartItems.get(i).getQuantity());
+//	 			transactionItem.setTotalPrice(cartItems.get(i).getTotalPrice());
+//	 			transactionItemDAO.save(transactionItem);
+//	 			transaction.getTransactionItems().add(transactionItem);
+//	 			cartItems.get(i).getProduct().setStock(cartItems.get(i).getProduct().getStock()-cartItems.get(i).getQuantity());
+//	 			productDAO.save(cartItems.get(i).getProduct());
+//	 			cartItemDAO.delete(cartItems.get(i));
+//	 			cart.getCartItems().remove(cartItems.get(i));
+//	 			cartService.update(cart);
+//		
+//			
+//		}
 		
 		Transaction transactionSave = transactionDAO.save(transaction);
 		

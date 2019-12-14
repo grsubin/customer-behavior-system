@@ -56,12 +56,24 @@ public class Product {
     @OneToMany(mappedBy = "product")
     @JsonIgnore
     private List<CartItem> cartItemLists;
+    
+	@Column(name = "imageURL")
+	private String imageURL;
 	
 	@CreationTimestamp
 	private Date creationDate;
 	
 	@UpdateTimestamp
 	private Date updateProductDate;
+
+	
+	public String getImageURL() {
+		return imageURL;
+	}
+
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
 
 	public Long getId() {
 		return id;

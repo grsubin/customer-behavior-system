@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -23,7 +24,7 @@ import com.texas.CustomerBehaviorSystem.model.Transaction;
 import com.texas.CustomerBehaviorSystem.service.CartService;
 import com.texas.CustomerBehaviorSystem.service.TransactionService;
 import com.texas.CustomerBehaviorSystem.service.UserService;
-
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/v1/transaction")
 @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -39,7 +40,7 @@ public class TransactionController {
 	 private TokenProvider jwtTokenUtil;
 		
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Transaction> save(@RequestHeader String authorization, @PathVariable(value = "cartId") Long cartId ) throws IOException{
+	public ResponseEntity<Transaction> save(@RequestHeader String authorization) throws IOException{
 		authorization = authorization.replace(TOKEN_PREFIX, "");
 		String tokenUsername = jwtTokenUtil.getUsernameFromToken(authorization);
 		Cart cart = userService.findOne(tokenUsername).getCart();

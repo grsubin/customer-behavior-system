@@ -7,7 +7,14 @@ public class ProductDTO {
 	private Integer stock;
 	private double price;
 	private String categoryName;
+	private String imageURL;
 	
+	public String getImageURL() {
+		return imageURL;
+	}
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
 	public String getName() {
 		return name;
 	}

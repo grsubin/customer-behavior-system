@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Cart {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(name = "cart_id")
 	private Long id;
 	
@@ -95,5 +95,13 @@ public class Cart {
 	public void setUpdateCartDate(Date updateCartDate) {
 		this.updateCartDate = updateCartDate;
 	}
+
+	@Override
+	public String toString() {
+		return "Cart [id=" + id + ", user=" + user + ", amount=" + amount + ", cartItems=" + cartItems
+				+ ", creationDate=" + creationDate + ", updateCartDate=" + updateCartDate + ", getCartItems()="
+				+ getCartItems() + "]";
+	}
+	
 	
 }

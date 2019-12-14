@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +26,7 @@ import com.texas.CustomerBehaviorSystem.model.User;
 import com.texas.CustomerBehaviorSystem.service.CartService;
 import com.texas.CustomerBehaviorSystem.service.ProductService;
 import com.texas.CustomerBehaviorSystem.service.UserService;
-
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/v1/cart")
 @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -52,7 +53,7 @@ public class CartController {
 		String tokenUsername = jwtTokenUtil.getUsernameFromToken(authorization);
 		if(tokenUsername.equals(username)) {
 			Cart cart = userService.findOne(username).getCart();
-			return new ResponseEntity<>(cart, HttpStatus.FOUND);
+			return new ResponseEntity<>(cart, HttpStatus.OK);
 		}else {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -60,12 +61,13 @@ public class CartController {
 	
 
     @RequestMapping(value = "/{productId}", method = RequestMethod.POST)
-    public ResponseEntity<CartItem> saveItem(@RequestHeader String authorization, @RequestParam (value = "q", required = false) String quantity,
+    public ResponseEntity<CartItem> saveItem(@RequestHeader String authorization, @RequestParam (value = "q", required = false) Integer quantity,
                         @PathVariable(value = "productId") Long productId){
     	
 		if (quantity == null){throw new IllegalArgumentException("Quantity = null");}
 
-        int q = Integer.parseInt(quantity);
+        int q = quantity;
+        authorization = authorization.replace(TOKEN_PREFIX, "");
         String tokenUsername = jwtTokenUtil.getUsernameFromToken(authorization);
     	User user = userService.findOne(tokenUsername);
         Cart cart = user.getCart();
@@ -84,7 +86,8 @@ public class CartController {
                 }
                 cartItem.setTotalPrice(product.getPrice()*cartItem.getQuantity());
                 cartItemDAO.save(cartItem);
-
+                cart.getCartItems().add(cartItem);
+                cartService.update(cart);
                 return new ResponseEntity<>(cartItem, HttpStatus.OK);
             }
         }
@@ -101,7 +104,9 @@ public class CartController {
         cartItem.setCart(cart);
         
         CartItem cartItemSave = cartItemDAO.save(cartItem);
-        
+        cart.getCartItems().add(cartItemSave);
+//        cartService.saveCart(cart);
+        cartService.update(cart);	
         return new ResponseEntity<>(cartItemSave, HttpStatus.OK);
         
     }
@@ -110,16 +115,25 @@ public class CartController {
     @RequestMapping(value = "/{cartItemId}", method = RequestMethod.DELETE)
     public  ResponseEntity<CartItem> removeItem(@RequestHeader String authorization, @PathVariable (value = "cartItemId") Long cartItemId){
         
+    	authorization = authorization.replace(TOKEN_PREFIX, "");
+		String tokenUsername = jwtTokenUtil.getUsernameFromToken(authorization);
     	CartItem cartItem = cartItemDAO.findById(cartItemId).get();
+    	Cart cart = userService.findOne(tokenUsername).getCart();
     	if(cartItem == null)
     		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     	cartItemDAO.deleteById(cartItemId);
+    	cart.getCartItems().remove(cartItem);
+    	cartService.update(cart);
         return new ResponseEntity<>(cartItem, HttpStatus.OK);
     }
     
     @RequestMapping(value = "/{cartItemId}", method = RequestMethod.PUT)
-    public ResponseEntity<CartItem> editItem(@RequestHeader String authentication, @RequestParam (value = "q") int quantity,
+    public ResponseEntity<CartItem> editItem(@RequestHeader String authorization, @RequestParam (value = "q") int quantity,
                          @PathVariable (value = "cartItemId") Long cartItemId){
+    	
+    	authorization = authorization.replace(TOKEN_PREFIX, "");
+		String tokenUsername = jwtTokenUtil.getUsernameFromToken(authorization);
+		Cart cart = userService.findOne(tokenUsername).getCart();
         CartItem cartItem = cartItemDAO.findById(cartItemId).get();
         cartItem.setTotalPrice(cartItem.getProduct().getPrice() * quantity);
         if(quantity <= cartItem.getProduct().getStock()) {
@@ -129,6 +143,7 @@ public class CartController {
             throw new IllegalArgumentException("Not so much quantity in sotck.");
         }
         cartItemDAO.save(cartItem);
+        cartService.update(cart);
         return new ResponseEntity<>(cartItem, HttpStatus.OK);
     }
 	

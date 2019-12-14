@@ -8,18 +8,38 @@ public class AuthToken {
     private String token;
     private Date expiryDate;
     private Set<Role> roles;
+    private String username;
 
     public AuthToken(){
 
     }
 
 
-	public AuthToken(String token, Date expiryDate, Set<Role> roles) {
+
+
+	public AuthToken(String token, Date expiryDate, Set<Role> roles, String username) {
 		super();
 		this.token = token;
 		this.expiryDate = expiryDate;
 		this.roles = roles;
+		this.username = username;
 	}
+
+
+
+
+	public String getUsername() {
+		return username;
+	}
+
+
+
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+
 
 
 	public Set<Role> getRoles() {
